@@ -2,6 +2,12 @@
 
 一个零依赖的静态页面：按月推演「工资、生活费、育儿、房贷、自己加的专项」，算出工作这些年最后能攒下多少钱，以及这笔钱在不上班之后还能撑多少年。所有计算都在浏览器里完成，不联网、不上传任何数据。
 
+## 在线使用
+
+**直接打开：<https://zgzlcc.github.io/Wealth/>**
+
+不用安装任何东西。填的数字只存在你自己浏览器的 localStorage 里（键名 `wealth-calc-v1`），不会上传到任何地方；换设备、换浏览器不会带走。
+
 ## 做了什么
 
 - **生活开支**卡：单人还是夫妻、人均月消费、年收益率、通货膨胀率。
@@ -80,18 +86,47 @@
 
 ## 本地运行
 
-页面用的是原生 ES module，直接双击 `index.html` 会被浏览器的 `file://` 安全策略拦住，需要起一个本地静态服务器。在项目目录里任选一种：
+不需要 `npm install`，也没有构建步骤：所有文件都是浏览器直接执行的原生 ES module。只是**不能直接双击 `index.html`**——`file://` 协议下浏览器会以 CORS 为由拦掉 `./src/app.js`，页面会白屏。所以起一个本地静态服务器就行。
+
+### 方式一：仓库自带的服务器（推荐，需要 Node.js）
 
 ```bash
-# 方式一：仓库自带的零依赖服务器（需要 Node）
-node scripts/serve.mjs      # 或 npm run dev
-# 打开 http://127.0.0.1:5182/
+cd Wealth          # 进入项目根目录，也就是 index.html 所在的那层
+node scripts/serve.mjs
 ```
 
+终端会打印 `财富计算器：http://127.0.0.1:5182/`，浏览器打开这个地址即可。装了 npm 的话 `npm run dev` 是等价的（同样不用 `npm install`）。
+
+- **换端口**：`PORT=8080 node scripts/serve.mjs`；Windows PowerShell 里写 `$env:PORT="8080"; node scripts/serve.mjs`
+- **给同一局域网的手机 / 另一台电脑看**：`HOST=0.0.0.0 node scripts/serve.mjs`（PowerShell 用 `$env:HOST="0.0.0.0"; node scripts/serve.mjs`），然后访问 `http://<本机IP>:5182/`
+- **停止**：终端里按 Ctrl+C
+
+### 方式二：任意静态服务器
+
+只要能把项目根目录当静态站点发出来就行，用你顺手的工具：
+
 ```bash
-# 方式二：用任意静态服务器，比如 Python
+# Python 3
 python -m http.server 5182
-# 打开 http://127.0.0.1:5182/
+
+# 或者 Node 的 npx serve
+npx serve -l 5182 .
 ```
 
-端口可以用环境变量改：`PORT=8080 node scripts/serve.mjs`。
+同样打开 <http://127.0.0.1:5182/>。注意要在**项目根目录**（`index.html` 所在目录）执行，在子目录里起服务会 404。
+
+### 打开后应该看到
+
+标题「财富计算器」，从上到下依次是：生活开支卡、专项支出卡、工资计算卡、还能撑多少年卡。用默认参数就能出结果——工作 30 年结束手上 1,225.9 万，扣掉 150 万医疗预留后 **1,075.9 万**，第二张卡显示「永远」。
+
+整个文件夹没有任何依赖和生成物，拷到别的机器上照样能跑。
+
+### 常见问题
+
+| 现象 | 原因 / 处理 |
+| --- | --- |
+| 页面白屏，控制台报 CORS 或 MIME type 错误 | 是双击 `index.html` 用 `file://` 打开的，改用上面的服务器 |
+| 启动时报 `EADDRINUSE` / 端口被占用 | 换一个端口：`PORT=8081 node scripts/serve.mjs` |
+| 改了文件页面没变 | 服务器响应带 `cache-control: no-store`，刷新即可；确认改的是 `src/` 下对应文件 |
+| 想把数字清空回默认 | 页面底部「恢复默认值」；或清掉该站点的 localStorage（键 `wealth-calc-v1`） |
+| 主题想固定成浅色 / 深色 | 右上角三选一，选择记在 `wealth-theme`，默认跟随系统 |
