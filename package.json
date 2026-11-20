@@ -1,0 +1,10 @@
+{
+  "name": "wealth",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "财富计算器：按月推演工资、生活费、育儿、房贷与自定义专项，算工作这些年最后能攒下多少，以及这笔钱能撑多久。",
+  "scripts": {
+    "dev": "node scripts/serve.mjs"
+  }
+}
