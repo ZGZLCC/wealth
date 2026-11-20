@@ -2,12 +2,6 @@
 
 一个零依赖的静态页面：按月推演「工资、生活费、育儿、房贷、自己加的专项」，算出工作这些年最后能攒下多少钱，以及这笔钱在不上班之后还能撑多少年。所有计算都在浏览器里完成，不联网、不上传任何数据。
 
-## 在线使用
-
-**推荐直接打开：<https://zgzlcc.github.io/Wealth/>**
-
-参数会自动记在当前浏览器的 localStorage 里，换设备不会带走。
-
 ## 做了什么
 
 - **生活开支**卡：单人还是夫妻、人均月消费、年收益率、通货膨胀率。
@@ -101,11 +95,3 @@ python -m http.server 5182
 ```
 
 端口可以用环境变量改：`PORT=8080 node scripts/serve.mjs`。
-
-## 发布到 GitHub Pages
-
-这个仓库本身就是站点，`index.html` 在根目录、资源都是相对路径：
-
-1. 把仓库推到 GitHub（仓库名 `Wealth`，Pages 地址就是 <https://zgzlcc.github.io/Wealth/>）；
-2. Settings → Pages → Source 选 `Deploy from a branch`，分支选 `main`、目录选 `/ (root)`；
-3. 一两分钟后即可用上面的网址访问。
